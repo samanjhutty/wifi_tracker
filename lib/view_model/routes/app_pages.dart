@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
+import 'package:wifi_tracker/view/home_screen/logger_screen.dart';
 import '../../services/auth_services.dart';
-import '../../view/home_screen/home.dart';
+import '../../view/home_screen/wifi_screen.dart';
 import '../bindings/root_bindings.dart';
 import 'app_routes.dart';
 
@@ -9,8 +10,13 @@ sealed class AppPage {
 
   static List<GetPage> routes = [
     GetPage(
-      name: AppRoutes.home,
-      page: () => const HomePage(),
+      name: AppRoutes.wifi,
+      page: () => const WifiScreen(),
+      binding: RootBindings(),
+    ),
+    GetPage(
+      name: AppRoutes.logger,
+      page: () => const LoggerScreen(),
       binding: RootBindings(),
     ),
   ];

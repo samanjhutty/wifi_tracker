@@ -1,3 +1,4 @@
 sealed class AppRoutes {
-  static const String home = '/home';
+  static const String wifi = '/wifi-screen';
+  static const String logger = '/logger-screen';
 }

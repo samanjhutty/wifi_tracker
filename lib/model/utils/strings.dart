@@ -4,6 +4,10 @@ sealed class StringRes {
 
   static const String submit = 'Submit';
   static const String success = 'Success';
+  static const String scan = 'Scan';
+  static const String wifiName = 'Wifi Name';
+  static const String wifiDetails = 'Wifi Details';
+  static const String track = 'Track';
   static const String home = 'Home';
   static const String search = 'Search';
   static const String cancel = 'Cancel';
@@ -13,14 +17,15 @@ sealed class StringRes {
   static const String refresh = 'Refresh';
 
   // errors
-  static const String errorEmail = 'Invalid Email';
-  static const String errorPhone = 'Invalid Phone Number';
-  static const String errorWeakPass = 'The password provided is too weak';
-  static const String errorCriteria = 'Password criteria dosen\'t match';
-  static String errorEmpty(String title) => '$title is required';
   static const String errorUnknown = 'Something went wrong, try again';
   static const String errorLoad = 'Failed to load data, refresh to load again';
   static const String errorCredentials =
       'Something went wrong,'
       ' please login again';
+
+  // long texts
+  static const String scanningDesc = 'Searching nearby networks... Hang tight!';
+  static const String noWifi =
+      'Couldn\'t find any networks. Try a'
+      ' different spot.';
 }

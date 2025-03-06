@@ -3,16 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wifi_tracker/model/utils/dimens.dart';
 import 'dart:developer' as dev;
-
 import 'package:wifi_tracker/model/utils/strings.dart';
 
 class AppConstants {
-  static const String baseUrl = '';
-  static const String signIn = '';
+  static const String trackerKey = 'wifi-tracker';
 }
 
 sealed class BoxKeys {
-  static const String boxName = 'ampify';
+  static const String boxName = 'wifi-tracker';
   static const String theme = '$boxName:theme';
 }
 

@@ -16,7 +16,7 @@ class AuthServeice extends GetxService {
   }
 
   String get initialRoute {
-    return AppRoutes.home;
+    return AppRoutes.logger;
   }
 }
 

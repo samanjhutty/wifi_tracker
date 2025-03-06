@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
       getPages: AppPage.routes,
       initialRoute: AppPage.initial,
       defaultTransition: Transition.rightToLeft,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: theme.primary,
