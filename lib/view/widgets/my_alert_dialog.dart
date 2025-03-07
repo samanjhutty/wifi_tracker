@@ -52,6 +52,7 @@ class MyBottomSheet extends StatelessWidget {
   final String title;
   final TickerProvider vsync;
   final VoidCallback? onClose;
+  final VoidCallback? onTapAction;
   final Widget child;
 
   const MyBottomSheet({
@@ -59,6 +60,7 @@ class MyBottomSheet extends StatelessWidget {
     required this.title,
     required this.vsync,
     this.onClose,
+    this.onTapAction,
     required this.child,
   });
 
@@ -82,7 +84,7 @@ class MyBottomSheet extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: Dimens.sizeDefault),
                   child: TextButton(
-                    onPressed: onClose ?? () => Navigator.pop(context),
+                    onPressed: onTapAction ?? () => Navigator.pop(context),
                     style: TextButton.styleFrom(
                         visualDensity: VisualDensity.compact),
                     child: const Text(

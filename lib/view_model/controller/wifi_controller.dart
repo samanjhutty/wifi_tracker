@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 import 'package:wifi_tracker/model/utils/app_constants.dart';
+import 'package:wifi_tracker/model/utils/dimens.dart';
+import 'package:wifi_tracker/model/utils/strings.dart';
+import 'package:wifi_tracker/view/widgets/loading_widgets.dart';
+import 'package:wifi_tracker/view/widgets/my_alert_dialog.dart';
 
-class WifiLoggerController extends GetxController {
+class WifiLoggerController extends GetxController
+    with GetTickerProviderStateMixin {
   final wifi = WiFiScan.instance;
 
   List<WiFiAccessPoint> wifiList = [];
@@ -12,16 +18,34 @@ class WifiLoggerController extends GetxController {
 
   RxBool scanning = RxBool(false);
 
-  @override
-  void onReady() {
-    Future(scanWifi);
-    super.onReady();
+  void askPermission(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => MyAlertDialog(
+        title: StringRes.grantPermiss,
+        content: Text(StringRes.permissionDesc),
+        actions: [
+          LoadingButton(
+            compact: true,
+            defWidth: true,
+            onPressed: () {
+              Navigator.pop(context);
+              Permission.locationAlways.request();
+            },
+            padding: EdgeInsets.symmetric(horizontal: Dimens.sizeLarge),
+            child: Text(StringRes.grant),
+          )
+        ],
+      ),
+    );
   }
 
   Future<void> scanWifi() async {
     await _startScan();
     await _getScannedResults();
   }
+
+  void addTracker() {}
 
   void onTrackChanged(WiFiAccessPoint wifi) {
     if (trackingWifi.contains(wifi)) {

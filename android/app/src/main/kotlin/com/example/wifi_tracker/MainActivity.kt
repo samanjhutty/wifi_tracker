@@ -1,5 +1,5 @@
-package com.example.wifi_tracker
+package com.samtech.wifi_tracker
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity : FlutterActivity()
+class MainActivity: FlutterActivity()
