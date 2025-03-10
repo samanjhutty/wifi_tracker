@@ -25,8 +25,14 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<!-- Custom Keys -->
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need location access to retrieve WiFi information.</string>
+  	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>Need location when in use</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Always and when in use!</string>
+    <key>NSLocationUsageDescription</key>
+    <string>Older devices need location.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Can I haz location always?</string>
 	<!--  -->
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

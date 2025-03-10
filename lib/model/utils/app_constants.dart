@@ -9,6 +9,10 @@ class AppConstants {
   static const String trackerKey = 'wifi-tracker';
 }
 
+sealed class FbKeys {
+  static const String wifiLog = 'wifi-log';
+}
+
 sealed class BoxKeys {
   static const String boxName = 'wifi-tracker';
   static const String theme = '$boxName:theme';
@@ -20,9 +24,10 @@ void logPrint(Object? value, [String? name]) {
   dev.log(log ?? 'null', name: (name ?? StringRes.appName).toUpperCase());
 }
 
-void dprint(String? value) {
+void dprint(Object? value, [String? name]) {
   if (kReleaseMode) return;
-  debugPrint(value ?? 'null');
+  final log = value is String? ? value : value.toString();
+  debugPrint('${(name ?? StringRes.appName).toUpperCase()} ${log ?? 'null'}');
 }
 
 class MyColoredBox extends StatelessWidget {

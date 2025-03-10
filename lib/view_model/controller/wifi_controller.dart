@@ -1,43 +1,57 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 import 'package:wifi_tracker/model/utils/app_constants.dart';
-import 'package:wifi_tracker/model/utils/dimens.dart';
-import 'package:wifi_tracker/model/utils/strings.dart';
-import 'package:wifi_tracker/view/widgets/loading_widgets.dart';
-import 'package:wifi_tracker/view/widgets/my_alert_dialog.dart';
+import 'package:workmanager/workmanager.dart';
 
 class WifiLoggerController extends GetxController
     with GetTickerProviderStateMixin {
   final wifi = WiFiScan.instance;
+  final connectivity = Connectivity();
+  final workManager = Workmanager();
+
+  final permission = [Permission.locationAlways, Permission.nearbyWifiDevices];
 
   List<WiFiAccessPoint> wifiList = [];
   List<WiFiAccessPoint> trackingWifi = [];
-  final trackWifiKey = const ValueKey('tracking-wifi');
 
+  final trackWifiKey = const ValueKey('tracking-wifi');
   RxBool scanning = RxBool(false);
 
-  void askPermission(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => MyAlertDialog(
-        title: StringRes.grantPermiss,
-        content: Text(StringRes.permissionDesc),
-        actions: [
-          LoadingButton(
-            compact: true,
-            defWidth: true,
-            onPressed: () {
-              Navigator.pop(context);
-              Permission.locationAlways.request();
-            },
-            padding: EdgeInsets.symmetric(horizontal: Dimens.sizeLarge),
-            child: Text(StringRes.grant),
-          )
-        ],
-      ),
-    );
+  @override
+  void onReady() {
+    Future(init);
+    super.onReady();
+  }
+
+  Future<void> init() async {
+    if (!await _checkWifi()) {
+      showToast('Wifi is off, please trun on Wifi');
+    }
+    if (!await _checkLocation()) _permissions();
+  }
+
+  Future<bool> _checkWifi() async {
+    final connection = await connectivity.checkConnectivity();
+    return connection.contains(ConnectivityResult.wifi);
+  }
+
+  Future<bool> _checkLocation() async {
+    for (final element in permission) {
+      final isGranted = await element.isGranted;
+      if (!isGranted) return false;
+    }
+    return true;
+  }
+
+  Future<void> _permissions() async {
+    Get.back();
+    for (final element in permission) {
+      await element.request().then(dprint);
+    }
   }
 
   Future<void> scanWifi() async {
@@ -45,7 +59,11 @@ class WifiLoggerController extends GetxController
     await _getScannedResults();
   }
 
-  void addTracker() {}
+  void addTracker() async {
+    await workManager.cancelAll();
+    await workManager.registerPeriodicTask("task-identifier", "wifi-logger",
+        frequency: const Duration(minutes: 2));
+  }
 
   void onTrackChanged(WiFiAccessPoint wifi) {
     if (trackingWifi.contains(wifi)) {
@@ -66,6 +84,7 @@ class WifiLoggerController extends GetxController
           break;
 
         default:
+          showToast('Location is turned off, please toggle location');
           throw Exception(can);
       }
     } catch (e) {
@@ -90,4 +109,14 @@ class WifiLoggerController extends GetxController
       logPrint(e, 'results');
     }
   }
+}
+
+@pragma('vm:entry-point')
+void logEvents() {
+  Workmanager().executeTask((task, inputData) {
+    final fb = FirebaseFirestore.instance;
+    final loger = fb.collection(FbKeys.wifiLog).doc('test-logger');
+    loger.update({'date-time': DateTime.now().toIso8601String()});
+    return Future.value(true);
+  });
 }

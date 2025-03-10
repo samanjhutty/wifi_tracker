@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wifi_tracker/services/extension_services.dart';
 import '../../model/utils/dimens.dart';
 import '../../model/utils/strings.dart';
 import '../../services/theme_services.dart';
@@ -51,23 +52,27 @@ class MyAlertDialog extends StatelessWidget {
 class MyBottomSheet extends StatelessWidget {
   final String title;
   final TickerProvider vsync;
+  final Color? bgColor;
+  final bool? isExpanded;
   final VoidCallback? onClose;
-  final VoidCallback? onTapAction;
   final Widget child;
 
   const MyBottomSheet({
     super.key,
     required this.title,
     required this.vsync,
+    this.bgColor,
     this.onClose,
-    this.onTapAction,
+    this.isExpanded,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
+    final scheme = context.scheme;
     return BottomSheet(
         onClosing: onClose ?? () {},
+        backgroundColor: bgColor ?? scheme.background,
         animationController: BottomSheet.createAnimationController(vsync),
         builder: (_) {
           return SafeArea(
@@ -84,7 +89,7 @@ class MyBottomSheet extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: Dimens.sizeDefault),
                   child: TextButton(
-                    onPressed: onTapAction ?? () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(context),
                     style: TextButton.styleFrom(
                         visualDensity: VisualDensity.compact),
                     child: const Text(
@@ -98,7 +103,7 @@ class MyBottomSheet extends StatelessWidget {
             const SizedBox(height: Dimens.sizeSmall),
             const MyDivider(),
             const SizedBox(height: Dimens.sizeDefault),
-            child,
+            if (isExpanded ?? false) Expanded(child: child) else child
           ]));
         });
   }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "21869404289",
+    "project_id": "wifi-tracker-cf8a2",
+    "storage_bucket": "wifi-tracker-cf8a2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21869404289:android:543642698fef6a1e306d80",
+        "android_client_info": {
+          "package_name": "com.samtech.wifi_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClr50Y5aAAwlzXil7PESAuGlFJZrLSS8M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
