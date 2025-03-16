@@ -1,25 +1,32 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wifi_scan/wifi_scan.dart';
+import 'package:wifi_tracker/model/models/tracker_model.dart';
 import 'package:wifi_tracker/model/utils/app_constants.dart';
-import 'package:workmanager/workmanager.dart';
+import 'package:wifi_tracker/services/box_services.dart';
 
 class WifiLoggerController extends GetxController
     with GetTickerProviderStateMixin {
   final wifi = WiFiScan.instance;
+  final box = BoxServices.to;
   final connectivity = Connectivity();
-  final workManager = Workmanager();
+  final fgServices = FlutterBackgroundService();
 
-  final permission = [Permission.locationAlways, Permission.nearbyWifiDevices];
+  final permission = [
+    Permission.locationAlways,
+    Permission.nearbyWifiDevices,
+    Permission.ignoreBatteryOptimizations
+  ];
 
   List<WiFiAccessPoint> wifiList = [];
   List<WiFiAccessPoint> trackingWifi = [];
 
   final trackWifiKey = const ValueKey('tracking-wifi');
   RxBool scanning = RxBool(false);
+  RxBool isTracking = RxBool(false);
 
   @override
   void onReady() {
@@ -50,7 +57,7 @@ class WifiLoggerController extends GetxController
   Future<void> _permissions() async {
     Get.back();
     for (final element in permission) {
-      await element.request().then(dprint);
+      await element.request();
     }
   }
 
@@ -59,10 +66,16 @@ class WifiLoggerController extends GetxController
     await _getScannedResults();
   }
 
-  void addTracker() async {
-    await workManager.cancelAll();
-    await workManager.registerPeriodicTask("task-identifier", "wifi-logger",
-        frequency: const Duration(minutes: 2));
+  void addTracker() {
+    final wifi = trackingWifi.map((e) => TrackerModel.fromWifi(e)).toList();
+    final json = wifi.map((e) => e.toJson()).toList();
+    box.write(BoxKeys.trackingList, json);
+  }
+
+  void onTrackingChanged(bool value) async {
+    isTracking.value = !isTracking.value;
+    await box.write(BoxKeys.isTracking, isTracking.value);
+    if (isTracking.value) fgServices.startService();
   }
 
   void onTrackChanged(WiFiAccessPoint wifi) {
@@ -109,14 +122,4 @@ class WifiLoggerController extends GetxController
       logPrint(e, 'results');
     }
   }
-}
-
-@pragma('vm:entry-point')
-void logEvents() {
-  Workmanager().executeTask((task, inputData) {
-    final fb = FirebaseFirestore.instance;
-    final loger = fb.collection(FbKeys.wifiLog).doc('test-logger');
-    loger.update({'date-time': DateTime.now().toIso8601String()});
-    return Future.value(true);
-  });
 }

@@ -17,6 +17,7 @@ sealed class StringRes {
   static const String share = 'Share';
   static const String settings = 'Settings';
   static const String refresh = 'Refresh';
+  static const String startTrack = 'Start Tracking';
 
   // errors
   static const String errorUnknown = 'Something went wrong, try again';

@@ -71,7 +71,7 @@ class MyBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = context.scheme;
     return BottomSheet(
-        onClosing: onClose ?? () {},
+        onClosing: () {},
         backgroundColor: bgColor ?? scheme.background,
         animationController: BottomSheet.createAnimationController(vsync),
         builder: (_) {
@@ -89,7 +89,10 @@ class MyBottomSheet extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: Dimens.sizeDefault),
                   child: TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      onClose?.call();
+                      Navigator.pop(context);
+                    },
                     style: TextButton.styleFrom(
                         visualDensity: VisualDensity.compact),
                     child: const Text(

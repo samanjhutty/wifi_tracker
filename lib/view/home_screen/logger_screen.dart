@@ -32,7 +32,28 @@ class LoggerScreen extends GetView<WifiLoggerController> {
           const SizedBox(width: Dimens.sizeDefault),
         ],
       ),
-      child: Column(children: []),
+      child: Column(children: [
+        const SizedBox(height: Dimens.sizeExtraLarge),
+        Row(
+          children: [
+            Text(StringRes.startTrack.toUpperCase(),
+                style: TextStyle(
+                    color: scheme.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: Dimens.fontExtraDoubleLarge)),
+            const Spacer(),
+            SizedBox(
+              height: Dimens.sizeDefault,
+              child: Obx(() {
+                return Switch(
+                  value: controller.isTracking.value,
+                  onChanged: controller.onTrackingChanged,
+                );
+              }),
+            ),
+          ],
+        )
+      ]),
     );
   }
 

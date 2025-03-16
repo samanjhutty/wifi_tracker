@@ -16,6 +16,8 @@ sealed class FbKeys {
 sealed class BoxKeys {
   static const String boxName = 'wifi-tracker';
   static const String theme = '$boxName:theme';
+  static const String trackingList = '$boxName:wifi-tracking';
+  static const String isTracking = '$boxName:tracking';
 }
 
 void logPrint(Object? value, [String? name]) {
