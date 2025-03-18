@@ -16,7 +16,7 @@ class TrackerModel {
   }
 
   factory TrackerModel.fromWifi(WiFiAccessPoint wifi) {
-    return TrackerModel(id: wifi.bssid, name: wifi.ssid);
+    return TrackerModel(id: wifi.bssid, name: wifi.ssid, log: []);
   }
 
   TrackerModel copyWith(
@@ -33,8 +33,8 @@ class TrackerModel {
 }
 
 class TrackerLog {
-  final String datetime;
-  final bool reachable;
+  final String? datetime;
+  final bool? reachable;
 
   const TrackerLog({required this.datetime, required this.reachable});
 

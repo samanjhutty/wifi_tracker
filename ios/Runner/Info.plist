@@ -33,6 +33,10 @@
     <string>Older devices need location.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Can I haz location always?</string>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+    	<string>dev.flutter.background.refresh</string>
+	</array>
 	<!--  -->
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

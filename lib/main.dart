@@ -22,7 +22,7 @@ Future<void> _initServices() async {
   try {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-    await GetStorage.init();
+    await GetStorage.init(BoxKeys.boxName);
     Get.putAsync(() => AuthServeice.instance.init());
     await ForegroundServices.init();
   } catch (e) {

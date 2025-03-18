@@ -3,8 +3,8 @@ import '../model/utils/app_constants.dart';
 import '../model/utils/color_resources.dart';
 
 class BoxServices {
-  static BoxServices? _to;
-  static BoxServices get to => _to ??= BoxServices._init();
+  static BoxServices? _instance;
+  static BoxServices get instance => _instance ??= BoxServices._init();
 
   BoxServices._init();
 

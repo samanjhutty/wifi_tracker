@@ -107,7 +107,8 @@ class WifiScreen extends GetView<WifiLoggerController> {
                             return SizedBox(
                               height: Dimens.sizeDefault,
                               child: Switch(
-                                value: controller.trackingWifi.contains(item),
+                                value: controller.trackingWifi
+                                    .any((e) => e.id == item.bssid),
                                 onChanged: (_) =>
                                     controller.onTrackChanged(item),
                               ),

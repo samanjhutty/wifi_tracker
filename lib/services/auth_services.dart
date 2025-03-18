@@ -9,7 +9,7 @@ class AuthServeice extends GetxService {
   AuthServeice._init();
   static AuthServeice get instance => _instance ??= AuthServeice._init();
 
-  final box = GetStorage();
+  final box = GetStorage(BoxKeys.boxName);
 
   Future<AuthServeice> init() async {
     return this;

@@ -32,7 +32,7 @@ class MyTheme extends StatefulWidget {
 }
 
 class ThemeServiceState extends State<MyTheme> {
-  final _services = BoxServices.to;
+  final _services = BoxServices.instance;
 
   late String _text;
   late Color _primary;
