@@ -10,7 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 import 'package:wifi_tracker/model/models/tracker_model.dart';
 import 'package:wifi_tracker/model/utils/app_constants.dart';
-import 'package:wifi_tracker/services/extension_services.dart';
+import 'package:wifi_tracker/model/utils/utils.dart';
 import 'package:wifi_tracker/services/firebase_options.dart';
 
 class ForegroundServices {
@@ -26,8 +26,9 @@ class ForegroundServices {
             onForeground: onStart,
             onBackground: onIosBackground),
         androidConfiguration: AndroidConfiguration(
-          initialNotificationTitle: 'Wifi Tracker',
-          initialNotificationContent: 'Tracking Started...',
+          // initialNotificationTitle: 'Wifi Tracker',
+          // initialNotificationContent: 'Tracking Started...',
+          // notificationChannelId: notificationChannelId,
           foregroundServiceTypes: [AndroidForegroundType.location],
           autoStart: false,
           onStart: onStart,
@@ -58,27 +59,47 @@ void onStart(ServiceInstance service) async {
   final fb = FirebaseFirestore.instance.collection(FbKeys.wifiLog);
   final box = GetStorage(BoxKeys.boxName);
   final wifi = WiFiScan.instance;
-  final userId = 'TEST';
 
   List? _json = box.read(BoxKeys.trackingList);
-  final doc = await fb.doc(userId).get();
-  if (!doc.exists) fb.doc(userId).set({'tracker': _json ?? []});
+  final doc = await fb.doc(FbKeys.userId).get();
+  if (!doc.exists) {
+    fb.doc(FbKeys.userId).set({
+      'user_id': FbKeys.userId,
+      'start_date': DateTime.now().toIso8601String(),
+      'wifi': _json ?? []
+    });
+  }
+  final _local = List<WifiTrackerModel>.from(
+      _json?.map((e) => WifiTrackerModel.fromJson(e)) ?? []);
+  var _cloud = List<WifiTrackerModel>.from(
+      doc.data()?['wifi']?.map((e) => WifiTrackerModel.fromJson(e)) ?? []);
+
+  for (final wifi in _local) {
+    if (!_cloud.any((e) => e.id == wifi.id)) _cloud.add(wifi);
+  }
+  final _log = _cloud.map((e) => e.toJson()).toList();
+  fb.doc(FbKeys.userId).update({'wifi': _log});
 
   Timer.periodic(const Duration(minutes: 1), (timer) async {
     try {
       await wifi.startScan();
-      final now = DateTime.now().toJson();
+      final now = DateTime.now();
       final results = await wifi.getScannedResults();
-      final json = (await fb.doc(userId).get()).data() ?? {};
-      var tracking = List<TrackerModel>.from(
-          json['tracker']?.map((e) => TrackerModel.fromJson(e)) ?? []);
+      final json = (await fb.doc(FbKeys.userId).get()).data() ?? {};
+      var tracking = TrackerModel.fromJson(json);
 
-      for (var item in tracking) {
+      for (var item in tracking.wifi ?? []) {
         final reachable = results.any((e) => e.bssid == item.id);
-        item.log?.add(TrackerLog(datetime: now, reachable: reachable));
+        if ((item.log.isEmpty) || item.log.last.reachable != reachable) {
+          final totalDuration = Utils.getDiff(item.log, now);
+          item.log.add(TrackerLog(
+              datetime: now.toIso8601String(),
+              totalDuration: totalDuration.inMinutes,
+              reachable: reachable));
+        }
       }
-      final log = tracking.map((e) => e.toJson()).toList();
-      fb.doc(userId).update({'tracker': log});
+      final log = tracking.wifi?.map((e) => e.toJson()).toList() ?? [];
+      fb.doc(FbKeys.userId).update({'wifi': log});
     } catch (e) {
       logPrint(e, 'fgservices');
     }

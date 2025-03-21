@@ -18,6 +18,9 @@ sealed class StringRes {
   static const String settings = 'Settings';
   static const String refresh = 'Refresh';
   static const String startTrack = 'Start Tracking';
+  static const String totalLost = 'Total Lost';
+  static const String totalTracked = 'Total Tracked';
+  static const String summary = 'Summary';
 
   // errors
   static const String errorUnknown = 'Something went wrong, try again';
@@ -27,6 +30,8 @@ sealed class StringRes {
 
   // long texts
   static const String scanningDesc = 'Searching nearby networks... Hang tight!';
+  static const String noTracking = 'No Wifi tracking, kindly'
+      ' scan and select wifi to track';
   static const String noWifi = 'Couldn\'t find any networks. Try a'
       ' different spot.';
   static const String permissionDesc = 'Some permission are required in '

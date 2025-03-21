@@ -27,6 +27,7 @@ enum ThemeServices {
   final Color primaryContainer;
   final Color onPrimaryContainer;
   final Color background;
+  final Color backgroundDark;
   final Color surface;
   final Color textColor;
   final Color textColorLight;
@@ -54,6 +55,7 @@ enum ThemeServices {
     required this.onPrimaryContainer,
   })  : brightness = Brightness.light,
         background = const Color(0xFFFAFAFA),
+        backgroundDark = const Color(0xFFE0E0E0),
         surface = const Color(0xFFF0F4EF),
         textColor = const Color(0xFF1B1C1E),
         textColorLight = const Color(0xFF616161),

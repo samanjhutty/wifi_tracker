@@ -14,18 +14,21 @@ extension MyList on List<String> {
 }
 
 extension MyDuration on Duration {
-  String format() => _format(this);
+  String get format => _format(this);
+  String get formatRAW => _formatRaw(this);
 
-  String _format(Duration time) {
+  String _formatRaw(Duration time) {
     if (time.inMinutes >= 60) {
       final min = time.inMinutes - (time.inHours * 60);
-      return '${time.inHours}:${_formatInt(min)}';
+      return '${time.inHours} H, ${_formatInt(min)} min';
     }
-    if (time.inSeconds >= 60) {
-      final sec = time.inSeconds - (time.inMinutes * 60);
-      return '${time.inMinutes}:${_formatInt(sec)}';
-    }
-    return '0:${_formatInt(time.inSeconds)}';
+    return '${time.inMinutes} min';
+  }
+
+  String _format(Duration time) {
+    final raw = _formatRaw(time);
+    if (raw.split(' ').first == '0') return 'Few seconds';
+    return raw;
   }
 
   String _formatInt(int num) {
@@ -35,47 +38,54 @@ extension MyDuration on Duration {
 }
 
 extension MyDateTime on DateTime {
-  String toJson() => _dateTime(this);
+  // String toJson() => _dateTime(this);
   String get formatTime => _formatedTime(this);
   String get formatDate => _formatedDate(this);
+  String get format => _format(this);
 
-  String _dateTime(DateTime now) {
-    String date = '${now.year}${_format(now.month)}${_format(now.day)}';
-    String time =
-        '${_format(now.hour)}${_format(now.minute)}'
-        '${_format(now.second)}${_formatMili(now.millisecond)}';
-    return date + time;
-  }
+  // String _dateTime(DateTime now) {
+  //   String date = '${now.year}${_format(now.month)}${_format(now.day)}';
+  //   String time =
+  //       '${_format(now.hour)}${_format(now.minute)}'
+  //       '${_format(now.second)}${_formatMili(now.millisecond)}';
+  //   return date + time;
+  // }
 
-  String _formatMili(int number) {
-    String int = number.toString();
-    switch (int.length) {
-      case 2:
-        return '0$int';
-      case 1:
-        return '00$int';
-      default:
-        return int;
-    }
-  }
+  // String _formatMili(int number) {
+  //   String int = number.toString();
+  //   switch (int.length) {
+  //     case 2:
+  //       return '0$int';
+  //     case 1:
+  //       return '00$int';
+  //     default:
+  //       return int;
+  //   }
+  // }
 
   String _formatedTime(DateTime time) {
-    String hour = _format(time.hour);
-    String min = _format(time.minute);
+    String hour = _formatInt(time.hour);
+    String min = _formatInt(time.minute);
 
     return '$hour:$min';
   }
 
   String _formatedDate(DateTime time) {
-    String day = _format(time.day);
+    String day = _formatInt(time.day);
 
     return '${_formatMonth(time.month)} $day, ${time.year}';
   }
 
-  String _format(int number) {
+  String _formatInt(int number) {
     String int = number.toString();
     String result = int.length > 1 ? int : '0$int';
     return result;
+  }
+
+  String _format(DateTime dateTime) {
+    final date = dateTime.formatDate;
+    final time = dateTime.formatTime;
+    return '$date $time';
   }
 
   String _formatMonth(int month) {
@@ -112,7 +122,7 @@ extension MyDateTime on DateTime {
 }
 
 extension MyString on String {
-  DateTime get toDateTime => _formJson(this);
+  // DateTime get toDateTime => _formJson(this);
   bool get isStringPass => _passRegExp(this);
 
   _passRegExp(String text) {
@@ -120,14 +130,14 @@ extension MyString on String {
     return passExp.hasMatch(text);
   }
 
-  DateTime _formJson(String datetime) {
-    int year = int.parse(datetime.substring(0, 4));
-    int month = int.parse(datetime.substring(4, 6));
-    int day = int.parse(datetime.substring(6, 8));
-    int hour = int.parse(datetime.substring(8, 10));
-    int min = int.parse(datetime.substring(10, 12));
-    int sec = int.parse(datetime.substring(12, 14));
-    int milli = int.parse(datetime.substring(14, 17));
-    return DateTime(year, month, day, hour, min, sec, milli);
-  }
+  // DateTime _formJson(String datetime) {
+  //   int year = int.parse(datetime.substring(0, 4));
+  //   int month = int.parse(datetime.substring(4, 6));
+  //   int day = int.parse(datetime.substring(6, 8));
+  //   int hour = int.parse(datetime.substring(8, 10));
+  //   int min = int.parse(datetime.substring(10, 12));
+  //   int sec = int.parse(datetime.substring(12, 14));
+  //   int milli = int.parse(datetime.substring(14, 17));
+  //   return DateTime(year, month, day, hour, min, sec, milli);
+  // }
 }

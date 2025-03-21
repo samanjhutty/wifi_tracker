@@ -9,6 +9,7 @@ import 'package:wifi_tracker/model/models/tracker_model.dart';
 import 'package:wifi_tracker/model/utils/app_constants.dart';
 import 'package:wifi_tracker/services/box_services.dart';
 import 'package:wifi_tracker/services/foreground_services.dart';
+import 'package:wifi_tracker/view_model/routes/app_routes.dart';
 
 class WifiLoggerController extends GetxController
     with GetTickerProviderStateMixin {
@@ -25,7 +26,7 @@ class WifiLoggerController extends GetxController
   ];
 
   List<WiFiAccessPoint> wifiList = [];
-  List<TrackerModel> trackingWifi = [];
+  List<WifiTrackerModel> trackingWifi = [];
 
   final trackWifiKey = const ValueKey('tracking-wifi');
   RxBool scanning = RxBool(false);
@@ -44,8 +45,9 @@ class WifiLoggerController extends GetxController
     if (!await _checkLocation()) _permissions();
     isTracking.value = box.read(BoxKeys.isTracking) ?? false;
     List? list = box.read(BoxKeys.trackingList);
-    trackingWifi = List<TrackerModel>.from(
-        list?.map((e) => TrackerModel.fromJson(e)) ?? []);
+    trackingWifi = List<WifiTrackerModel>.from(
+        list?.map((e) => WifiTrackerModel.fromJson(e)) ?? []);
+    scanWifi();
   }
 
   Future<bool> _checkWifi() async {
@@ -71,6 +73,10 @@ class WifiLoggerController extends GetxController
   Future<void> scanWifi() async {
     await _startScan();
     await _getScannedResults();
+  }
+
+  void toDetails(WifiTrackerModel wifi) {
+    Get.toNamed(AppRoutes.logDetails, arguments: [wifi.id, wifi.name]);
   }
 
   void addTracker() {
@@ -103,12 +109,12 @@ class WifiLoggerController extends GetxController
   }
 
   void onTrackChanged(WiFiAccessPoint wifi) {
-    test(TrackerModel e) => e.id == wifi.bssid;
+    test(WifiTrackerModel e) => e.id == wifi.bssid;
     if (trackingWifi.any(test)) {
       int index = trackingWifi.indexWhere(test);
       trackingWifi.removeAt(index);
     } else {
-      trackingWifi.add(TrackerModel.fromWifi(wifi));
+      trackingWifi.add(WifiTrackerModel.fromWifi(wifi));
     }
     update([trackWifiKey]);
   }

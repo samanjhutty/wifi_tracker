@@ -41,6 +41,7 @@ class ThemeServiceState extends State<MyTheme> {
   late Color _onPrimaryContainer;
   late Brightness _brightness;
   late Color _background;
+  late Color _backgroundDark;
   late Color _surface;
   late Color _textColor;
   late Color _textColorLight;
@@ -53,6 +54,7 @@ class ThemeServiceState extends State<MyTheme> {
   Color get onPrimaryContainer => _onPrimaryContainer;
   Brightness get brightness => _brightness;
   Color get background => _background;
+  Color get backgroundDark => _backgroundDark;
   Color get surface => _surface;
   Color get textColor => _textColor;
   Color get textColorLight => _textColorLight;
@@ -69,6 +71,7 @@ class ThemeServiceState extends State<MyTheme> {
     _onPrimaryContainer = theme.onPrimaryContainer;
     _brightness = theme.brightness;
     _background = theme.background;
+    _backgroundDark = theme.backgroundDark;
     _surface = theme.surface;
     _textColor = theme.textColor;
     _textColorLight = theme.textColorLight;
@@ -87,6 +90,7 @@ class ThemeServiceState extends State<MyTheme> {
     _onPrimaryContainer = theme.onPrimaryContainer;
     _brightness = theme.brightness;
     _background = theme.background;
+    _backgroundDark = theme.backgroundDark;
     _surface = theme.surface;
     _textColor = theme.textColor;
     _textColorLight = theme.textColorLight;

@@ -29,11 +29,10 @@ class WifiScreen extends GetView<WifiLoggerController> {
 
           if (controller.wifiList.isEmpty) {
             return ToolTipWidget(
-              margin: EdgeInsets.symmetric(vertical: context.height * .1),
-              icon: Icon(Icons.wifi_find,
-                  color: scheme.disabled, size: Dimens.sizeExtraLarge * 2),
-              title: StringRes.noWifi,
-            );
+                margin: EdgeInsets.symmetric(vertical: context.height * .1),
+                icon: Icon(Icons.wifi_find,
+                    color: scheme.disabled, size: Dimens.sizeExtraLarge * 2),
+                title: StringRes.noWifi);
           }
           return ListView(
             padding: const EdgeInsets.all(Dimens.sizeDefault),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wifi_tracker/services/extension_services.dart';
 import 'package:wifi_tracker/services/theme_services.dart';
 import '../../model/utils/dimens.dart';
 import '../../model/utils/strings.dart';
@@ -19,11 +20,14 @@ class MyDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = context.scheme;
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: margin ?? 0),
-      width: width,
-      child: Divider(color: color ?? Colors.grey[350], thickness: thickness),
-    );
+        margin: EdgeInsets.symmetric(horizontal: margin ?? 0),
+        width: width,
+        child: Divider(
+          color: color ?? scheme.backgroundDark,
+          thickness: thickness,
+        ));
   }
 }
 
@@ -50,8 +54,7 @@ class PaginationDots extends StatelessWidget {
         onTap: onTap,
         child: CircleAvatar(
           radius: 3,
-          backgroundColor:
-              color ??
+          backgroundColor: color ??
               (current ? scheme.primary : scheme.disabled.withAlpha(100)),
         ),
       ),
@@ -73,20 +76,20 @@ class ToolTipWidget extends StatelessWidget {
     Widget? icon,
     this.title,
     this.alignment,
-  }) : _icon = icon,
-       _scrolable = null,
-       _placeHolder = false;
+  })  : _icon = icon,
+        _scrolable = null,
+        _placeHolder = false;
 
   const ToolTipWidget.placeHolder({
     super.key,
     String? icon,
     bool? scrolable,
     required this.title,
-  }) : _icon = icon,
-       _scrolable = scrolable,
-       _placeHolder = true,
-       margin = null,
-       alignment = null;
+  })  : _icon = icon,
+        _scrolable = scrolable,
+        _placeHolder = true,
+        margin = null,
+        alignment = null;
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +136,7 @@ class ToolTipWidget extends StatelessWidget {
     }
 
     return Container(
-      margin:
-          margin ??
+      margin: margin ??
           EdgeInsets.only(
             top: context.height * .1,
             left: Dimens.sizeDefault,

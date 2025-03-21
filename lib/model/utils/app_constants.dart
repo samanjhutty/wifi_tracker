@@ -11,6 +11,7 @@ class AppConstants {
 
 sealed class FbKeys {
   static const String wifiLog = 'wifi-log';
+  static const String userId = 'TESTING';
 }
 
 sealed class BoxKeys {
