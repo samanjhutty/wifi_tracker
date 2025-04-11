@@ -18,7 +18,11 @@ extension MyDuration on Duration {
   String get formatRAW => _formatRaw(this);
 
   String _formatRaw(Duration time) {
-    if (time.inMinutes >= 60) {
+    if (time.inDays > 0) {
+      final hours = time.inHours - (time.inDays * 24);
+      final min = time.inMinutes - (time.inHours * 60);
+      return '${time.inDays}D, ${_formatInt(hours)} H, ${_formatInt(min)} min';
+    } else if (time.inMinutes >= 60) {
       final min = time.inMinutes - (time.inHours * 60);
       return '${time.inHours} H, ${_formatInt(min)} min';
     }

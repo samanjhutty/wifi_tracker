@@ -82,21 +82,28 @@ void onStart(ServiceInstance service) async {
 
   Timer.periodic(const Duration(minutes: 1), (timer) async {
     try {
-      await wifi.startScan();
       final now = DateTime.now();
-      final results = await wifi.getScannedResults();
+      List<WiFiAccessPoint> results = [];
+      try {
+        final canScan = await wifi.canStartScan();
+        if (canScan != CanStartScan.yes) throw Exception(canScan);
+        await wifi.startScan();
+        final canGet = await wifi.canGetScannedResults();
+        if (canGet != CanGetScannedResults.yes) throw Exception(canGet);
+        results = await wifi.getScannedResults();
+      } catch (_) {}
       final json = (await fb.doc(FbKeys.userId).get()).data() ?? {};
       var tracking = TrackerModel.fromJson(json);
 
       for (var item in tracking.wifi ?? []) {
         final reachable = results.any((e) => e.bssid == item.id);
-        if ((item.log.isEmpty) || item.log.last.reachable != reachable) {
-          final totalDuration = Utils.getDiff(item.log, now);
-          item.log.add(TrackerLog(
-              datetime: now.toIso8601String(),
-              totalDuration: totalDuration.inMinutes,
-              reachable: reachable));
-        }
+        // if ((item.log.isEmpty) || item.log.last.reachable != reachable) {
+        final totalDuration = Utils.getDiff(item.log, now);
+        item.log.add(TrackerLog(
+            datetime: now.toIso8601String(),
+            totalDuration: totalDuration.inMinutes,
+            reachable: reachable));
+        // }
       }
       final log = tracking.wifi?.map((e) => e.toJson()).toList() ?? [];
       fb.doc(FbKeys.userId).update({'wifi': log});
